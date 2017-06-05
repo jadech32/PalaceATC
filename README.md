@@ -1,14 +1,14 @@
-An easy to use script made for Palace Skateboards US store. Project under development. 
+An easy to use script made for Palace Skateboards US store. Project under development.
 
 ## Features / TODO
 
-[ ] Add to cart
-[ ] Multiple Items per cart
-[ ] Proxy support
-[ ] Checkout
-[ ] Queue support
-[ ] Negative Keywords
-[ ] Scheduling
+- [ ] Add to cart
+- [ ] Multiple Items per cart
+- [ ] Proxy support
+- [ ] Checkout
+- [ ] Queue support
+- [ ] Negative Keywords
+- [ ] Scheduling
 
 ## License
 
