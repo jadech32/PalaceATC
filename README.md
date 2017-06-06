@@ -2,8 +2,8 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 
 ## Features / TODO
 
-- [ ] Add to cart
-- [ ] Multiple Items per cart
+- [x] Add to cart
+- [x] Multiple Items per cart
 - [ ] Proxy support
 - [ ] Checkout
 - [ ] Queue support
