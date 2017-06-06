@@ -12,4 +12,6 @@ if __name__ == '__main__':
     cart = cart(session)
 
     log('Initializing script..','info')
-    cart.add_to_cart('hello')
+    cart.add_to_cart(['palace','jeans','midwash'])
+
+    # parse
