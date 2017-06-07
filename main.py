@@ -21,8 +21,8 @@ if __name__ == '__main__':
     q = Queue()
     cart = Cart(session, lock)
 
-    api_key = config['shipping_info']
-    captcha = Captcha('CAPTCHA_API_KEY')
+    api_key = config['key']['2captcha']
+    captcha = Captcha(api_key)
 
     log('Initializing script..','info')
     '''
