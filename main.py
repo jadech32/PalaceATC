@@ -16,7 +16,7 @@ if __name__ == '__main__':
     log = Logger().log
     q = Queue()
     cart = Cart(session, lock)
-    captcha = Captcha('070ce5ca29f5dadf76a1b2913ba0d9b7')
+    captcha = Captcha('CAPTCHA_API_KEY')
 
     log('Initializing script..','info')
     '''
