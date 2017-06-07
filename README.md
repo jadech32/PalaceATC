@@ -1,6 +1,7 @@
 An easy to use script made for Palace Skateboards US store. Project under development.
 
 ## Installation
+- Change values in ```config.example.json``` then rename to ```config.json```.
 
 ## Issues
 

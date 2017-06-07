@@ -22,7 +22,7 @@ class Tools:
 				with open(filePath) as jsonObj:
 					jsonFile = json.load(jsonObj)
 					if jsonFile:
-						log("%s has been loaded." % (filePath), "info")
+						#log("%s has been loaded." % (filePath), "info")
 						return jsonFile
 						break
 					else:

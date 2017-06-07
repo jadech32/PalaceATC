@@ -136,3 +136,111 @@ class Cart:
         # Send checkout
         checkout0 = session.post('https://shop-usa.palaceskateboards.com/cart', headers=header_checkout, data=payload, allow_redirects=True)
         log('At Checkout - URL: ' + checkout0.url,'pink')
+
+        # Authenticity Token
+        auth_token = re.findall('(name=\"authenticity_token\" value=\")([^\"]*)',checkout0.text)[0][1]
+        url_ship = str(checkout0.url) + '?step=contact_information'
+
+        headers_ship_info = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'Content-Length': '1402',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Host': 'shop-usa.palaceskateboards.com',
+            'Origin': 'https://shop-usa.palaceskateboards.com',
+            'Referer': url_ship,
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+        }
+
+        payload_ship_info = {
+            'utf8': '✓',
+            '_method': 'patch',
+            'authenticity_token': auth_token,
+            'previous_step': 'contact_information',
+            'step': 'shipping_method',
+            'checkout[email]': config['shipping_info']['email'],
+            'checkout[shipping_address][first_name]': '',
+            'checkout[shipping_address][last_name]': '',
+            'checkout[shipping_address][address1]': '',
+            'checkout[shipping_address][address2]': '',
+            'checkout[shipping_address][city]': '',
+            'checkout[shipping_address][country]': '',
+            'checkout[shipping_address][province]': '',
+            'checkout[shipping_address][zip]': '',
+            'checkout[shipping_address][phone]': '',
+            'checkout[shipping_address][first_name]': config['shipping_info']['first_name'],
+            'checkout[shipping_address][last_name]': config['shipping_info']['last_name'],
+            'checkout[shipping_address][address1]': config['shipping_info']['address1'],
+            'checkout[shipping_address][address2]': config['shipping_info']['address2'],
+            'checkout[shipping_address][city]': config['shipping_info']['city'],
+            'checkout[shipping_address][country]': config['shipping_info']['country'],
+            'checkout[shipping_address][province]': config['shipping_info']['province'],
+            'checkout[shipping_address][zip]': config['shipping_info']['zip'],
+            'checkout[shipping_address][phone]': config['shipping_info']['phone'],
+            'checkout[remember_me]': 'true',
+            'checkout[remember_me]': '0',
+            'checkout[remember_me]': '1',
+            'button': '',
+            'checkout[client_details][browser_width]': '1440',
+            'checkout[client_details][browser_height]': '732',
+            'checkout[client_details][javascript_enabled]': '1',
+            #'g-recaptcha-response': ''
+        }
+
+        # Submit Shipping info
+        log('Submitting Shipping Information..','yellow')
+        checkout1 = session.post(checkout0.url, data=payload_ship_info, headers=headers_ship_info, allow_redirects=True)
+
+        # Check if we successfully submitted shipping info
+        match = re.search('Return to customer information',checkout1.text)
+        if match:
+            log('At Shipping Method - URL: ' + checkout1.url, 'pink')
+        else:
+            log('Error submitting shipping information','error')
+
+        match1 = re.findall('(class=\"radio-wrapper\" data-shipping-method=\")([^\"]*)', checkout1.text)[0][1]
+        log('Shipping Method: ' + match1, 'yellow')
+        url_shipmethod = str(checkout0.url) + '?step=shipping_method'
+
+        # Submit Shipping Method
+        headers_ship_method = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'Content-Length': '432',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Host': 'shop-usa.palaceskateboards.com',
+            'Origin': 'https://shop-usa.palaceskateboards.com',
+            'Referer': url_shipmethod,
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+        }
+
+        auth_token_method = re.findall('(name=\"authenticity_token\" value=\")([^\"]*)',checkout1.text)[0][1]
+        payload_ship_method = {
+            'utf8': '✓',
+            '_method': 'patch',
+            'authenticity_token': auth_token_method,
+            'previous_step': 'shipping_method',
+            'step': 'payment_method',
+            'checkout[shipping_rate][id]': match1,
+            'button': '',
+            'checkout[client_details][browser_width]': '1440',
+            'checkout[client_details][browser_height]': '732',
+            'checkout[client_details][javascript_enabled]': '1',
+        }
+
+        log('Submitting Shipping Method..','yellow')
+        checkout2 = session.post(checkout0.url, data=payload_ship_method, headers=headers_ship_method, allow_redirects=True)
+
+        match = re.search('Complete order',checkout2.text)
+        if match:
+            log('At Payment Method - URL: ' + checkout2.url, 'pink')
+        else:
+            log('Error submitting shipping method','error')

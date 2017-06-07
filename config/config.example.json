@@ -7,7 +7,9 @@
     "city": "",
     "province": "",
     "zip": "",
-    "phone": "(xxx) xxx-xxxx"
+    "country": "",
+    "phone": "(xxx) xxx-xxxx",
+    "email": ""
   },
   "card_info": {
     "number": "xxxx xxxx xxxx xxxx",
