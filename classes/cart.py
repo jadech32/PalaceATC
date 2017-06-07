@@ -136,4 +136,3 @@ class Cart:
         # Send checkout
         checkout0 = session.post('https://shop-usa.palaceskateboards.com/cart', headers=header_checkout, data=payload, allow_redirects=True)
         log('At Checkout - URL: ' + checkout0.url,'pink')
-        

@@ -2,8 +2,7 @@
 #!/usr/bin/env python3
 
 import sys, os, os.path, json, requests, colorama, cfscrape
-from colorama import init
-init()
+
 
 sys.path.append('../')
 

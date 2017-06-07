@@ -3,6 +3,7 @@
 import requests
 import time
 import threading
+import json
 from classes.logger import Logger
 from classes.cart import Cart
 from classes.captcha import Captcha
@@ -10,13 +11,17 @@ from classes.queue import Queue
 from classes.tools import Tools
 
 
+
 if __name__ == '__main__':
     session = requests.Session()
     lock = threading.Lock()
-
+    tools = Tools()
+    config = tools.load('config/config.json')
     log = Logger().log
     q = Queue()
     cart = Cart(session, lock)
+
+    api_key = config['shipping_info']
     captcha = Captcha('CAPTCHA_API_KEY')
 
     log('Initializing script..','info')
