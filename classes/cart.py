@@ -95,7 +95,7 @@ class Cart:
 
         # Grab the payload information
         resp = session.get('https://shop-usa.palaceskateboards.com/cart/')
-        #print(resp.text)
+
         note = re.findall('(input type=\"hidden\" name=\"note\" id=\"note\" value=\")([\w|\d]+)',resp.text)[0][1]
         updates = re.findall('(updates[)([\d]+])',resp.text)
 
@@ -107,9 +107,11 @@ class Cart:
         else:
             log('Payload QTY not matching','error')
 
-        
+
         payload = {
             'note': note,
             'checkout': 'Checkout',
-
         }
+        # Update / concat payloads
+        for d in cart_dict:
+            payload.update(d)

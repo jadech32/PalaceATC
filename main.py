@@ -23,7 +23,7 @@ if __name__ == '__main__':
     cart.add_to_cart(['zollar','jacket','ice'],'medium')
     cart.add_to_cart(['zollar','jacket','gold'],'small')
     '''
-    t1 = threading.Thread(target=cart.add_to_cart, args=(['zollar','jacket','ice'],'medium'))
+    t1 = threading.Thread(target=cart.add_to_cart, args=(['rainbow','bong','longsleeve','white'],'small'))
     t2 = threading.Thread(target=cart.add_to_cart, args=(['zollar','jacket','gold'],'large'))
     t1.start()
     t2.start()
