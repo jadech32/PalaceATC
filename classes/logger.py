@@ -1,5 +1,6 @@
 # logger.py
 # developer: @eggins
+#!/usr/bin/env python3
 
 import time, sys
 
@@ -19,7 +20,7 @@ class Logger:
 			textColour = "\033[92m"
 		elif color.lower() == "info":
 			textColour = "\033[96m"
-		elif color.lower() == "debug":
+		elif color.lower() == "pink":
 			textColour = "\033[95m"
 		elif color.lower() == "yellow":
 			textColour = "\033[93m"

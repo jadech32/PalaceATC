@@ -6,8 +6,11 @@ import json
 import re
 import webbrowser
 from classes.logger import Logger
+from classes.tools import Tools
 
 log = Logger().log
+tools = Tools()
+config = tools.load('config/config.json')
 
 cart_dict = []
 
@@ -107,7 +110,7 @@ class Cart:
         else:
             log('Payload QTY not matching','error')
 
-
+        # Make payload
         payload = {
             'note': note,
             'checkout': 'Checkout',
@@ -115,3 +118,22 @@ class Cart:
         # Update / concat payloads
         for d in cart_dict:
             payload.update(d)
+
+        header_checkout = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'Content-Length': '70',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Host': 'shop-usa.palaceskateboards.com',
+            'Origin': 'https://shop-usa.palaceskateboards.com',
+            'Referer': 'https://shop-usa.palaceskateboards.com/cart',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+        }
+
+        # Send checkout
+        checkout0 = session.post('https://shop-usa.palaceskateboards.com/cart', headers=header_checkout, data=payload, allow_redirects=True)
+        log('At Checkout - URL: ' + checkout0.url,'pink')
+        
