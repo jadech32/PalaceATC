@@ -41,15 +41,14 @@ class Cart:
         if item_url=='':
             log('Item not found, retrying...','error')
         else:
-            page = session.get(item_url+'.xml')
-            page_data = parse(page.content)
-            page_data = json.loads(json.dumps(page_data))
+            page = session.get(item_url+'.json')
+            #page_data = parse(page.content)
+            page_data = json.loads(page.text)
 
-            for item in page_data['hash']['variants']['variant']:
+            for item in page_data['product']['variants']:
                 if(size.lower() == item['title'].lower()):
-                    log('Variant found for size ' + item['title'] + ': ' + item['id']['#text'],'yellow')
-                    item_id = item['id']['#text']
-
+                    log('Variant found for size ' + item['title'] + ': ' + str(item['id']),'yellow')
+                    item_id = item['id']
                     break;
 
             # add to session cart
@@ -71,6 +70,7 @@ class Cart:
 
         #for items in data['products']:
         #    print(items['title'])
+
 
     def check_cart(self):
         session = self.session
@@ -103,7 +103,7 @@ class Cart:
 
         # Sanity Check
         if len(cart_dict) == len(updates):
-            log('Payload QTY Matches - ' + str(len(updates)) + ' items in cart' ,'success')
+            log('Payload QTY Matches - ' + str(len(updates)) + ' items in cart ✓' ,'success')
         else:
             log('Payload QTY not matching','error')
 

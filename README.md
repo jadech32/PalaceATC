@@ -5,7 +5,6 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 ## Issues
 
  - Assumes that you are adding something that is not out of stock (i.e. new items)
- - Currently does not work with multi-word sizes (e.g. 'one size')
 
 
 ## Features / TODO
