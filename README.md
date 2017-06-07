@@ -1,5 +1,8 @@
 An easy to use script made for Palace Skateboards US store. Project under development.
 
+## Installation
+
+
 ## Features / TODO
 
 - [x] Add to cart

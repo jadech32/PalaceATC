@@ -3,7 +3,7 @@
 
 import time, sys
 
-class logger:
+class Logger:
 
 	# initalise base file naming structure for the logger
 	def __init__(self):

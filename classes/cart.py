@@ -3,10 +3,15 @@ import threading
 import requests
 from xmltodict import parse
 import json
+import re
 import webbrowser
-from classes.logger import logger
+from classes.logger import Logger
 
-class cart:
+log = Logger().log
+
+cart_dict = []
+
+class Cart:
 
     def __init__(self, session, lock):
         self.session = session
@@ -18,7 +23,7 @@ class cart:
         lock = self.lock
 
         response = session.get('https://shop-usa.palaceskateboards.com/sitemap_products_1.xml')
-        log = logger().log
+
         data = parse(response.content)
         data = json.loads(json.dumps(data))
         data = data['urlset']['url']
@@ -29,7 +34,7 @@ class cart:
         # Find item
         for item in data[1:]:
             if all(i in item['image:image']['image:title'].lower() for i in keywords):
-                print(log('Item found: ' + str(item['image:image']['image:title']),'yellow'))
+                log('Item found: ' + str(item['image:image']['image:title']),'yellow')
                 item_url = item['loc']
                 item_name = item['image:image']['image:title']
 
@@ -59,7 +64,7 @@ class cart:
             lock.acquire()
             add = session.post('https://shop-usa.palaceskateboards.com/cart/add.js', data=payload, headers=headers)
             if '200' in str(add.status_code):
-                log('Successfully added ' + item_name + ' to cart','yellow')
+                log('Successfully added ' + item_name + ' to cart','success')
             lock.release()
             #webbrowser.open_new_tab(item_url)
 
@@ -68,12 +73,43 @@ class cart:
         #    print(items['title'])
 
     def check_cart(self):
-        log = logger().log
         session = self.session
         response = session.get('https://shop-usa.palaceskateboards.com/cart.js')
         data = response.json()
         data = json.loads(json.dumps(data))
         log('---------- Cart ----------', 'lightpurple')
         log('Item Count: ' + str(data['item_count']),'yellow')
+        global cart_dict
         for item in data['items']:
-            log('    ' + item['title'] + ' - ' + str(item['quantity']), 'yellow')
+            log(' - ' + item['title'] + ' - ' + str(item['quantity']), 'yellow')
+            item = {'updates[' + str(item['id']) + ']': str(item['quantity'])}
+            cart_dict.append(item)
+
+    def checkout(self):
+        session = self.session
+        log('Starting Checkout Process..','info')
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4'
+        }
+
+        # Grab the payload information
+        resp = session.get('https://shop-usa.palaceskateboards.com/cart/')
+        #print(resp.text)
+        note = re.findall('(input type=\"hidden\" name=\"note\" id=\"note\" value=\")([\w|\d]+)',resp.text)[0][1]
+        updates = re.findall('(updates[)([\d]+])',resp.text)
+
+        log('Payload Note: ' + note,'yellow')
+
+        # Sanity Check
+        if len(cart_dict) == len(updates):
+            log('Payload QTY Matches - ' + str(len(updates)) + ' items in cart' ,'success')
+        else:
+            log('Payload QTY not matching','error')
+
+        
+        payload = {
+            'note': note,
+            'checkout': 'Checkout',
+
+        }
