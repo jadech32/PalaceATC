@@ -9,7 +9,7 @@ class Captcha:
         self.sitekey = '6LeoeSkTAAAAAA9rkZs5oS82l69OEYjKRZAiKdaF' # Default shopify sitekey
         self.url = 'https://shop-usa.palaceskateboards.com/'
 
-    def harvest(self):
+    def harvest(self, queue):
         log = Logger().log
         api_key = self.apiKey
         log('Harvesting Captcha..','info')
@@ -20,8 +20,9 @@ class Captcha:
         recaptcha_answer = s.get("http://2captcha.com/res.php?key={}&action=get&id={}".format(api_key, captcha_id)).text
         log("solving ref captcha...", 'yellow')
         while 'CAPCHA_NOT_READY' in recaptcha_answer:
-            sleep(5)
+            sleep(1)
             recaptcha_answer = s.get("http://2captcha.com/res.php?key={}&action=get&id={}".format(api_key, captcha_id)).text
         recaptcha_answer = recaptcha_answer.split('|')[1]
 
-        log(recaptcha_answer,'success')
+        log('Solved Captcha: ' + str(recaptcha_answer),'success')
+        queue.put(recaptcha_answer)

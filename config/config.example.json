@@ -19,5 +19,8 @@
   },
   "key": {
     "2captcha": "xxxxxx"
+  },
+  "settings": {
+    "captcha": "false"
   }
 }

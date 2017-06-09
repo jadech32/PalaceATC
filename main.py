@@ -23,7 +23,10 @@ if __name__ == '__main__':
 
     api_key = config['key']['2captcha']
     captcha = Captcha(api_key)
+    queue = Queue()
 
+    if 'true' in str(config['settings']['captcha'].lower()):
+        captcha.harvest(queue)
     log('Initializing script..','info')
     '''
     cart.add_to_cart(['zollar','jacket','ice'],'medium')
@@ -43,7 +46,7 @@ if __name__ == '__main__':
     cart.check_cart()
     # Advised to start solving 3 minutes before drop
     #captcha.harvest()
-    cart.checkout()
+    cart.checkout(queue)
     # Scheduler
     # Checkout
     # parse

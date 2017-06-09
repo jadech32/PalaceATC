@@ -88,7 +88,7 @@ class Cart:
             item = {'updates[' + str(item['id']) + ']': str(item['quantity'])}
             cart_dict.append(item)
         log('--------------------------', 'lightpurple')
-    def checkout(self):
+    def checkout(self, queue):
         session = self.session
         log('Starting Checkout Process..','info')
 
@@ -169,40 +169,78 @@ class Cart:
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
         }
 
-        payload_ship_info = {
-            'utf8': '✓',
-            '_method': 'patch',
-            'authenticity_token': auth_token,
-            'previous_step': 'contact_information',
-            'step': 'shipping_method',
-            'checkout[email]': config['shipping_info']['email'],
-            'checkout[shipping_address][first_name]': '',
-            'checkout[shipping_address][last_name]': '',
-            'checkout[shipping_address][address1]': '',
-            'checkout[shipping_address][address2]': '',
-            'checkout[shipping_address][city]': '',
-            'checkout[shipping_address][country]': '',
-            'checkout[shipping_address][province]': '',
-            'checkout[shipping_address][zip]': '',
-            'checkout[shipping_address][phone]': '',
-            'checkout[shipping_address][first_name]': config['shipping_info']['first_name'],
-            'checkout[shipping_address][last_name]': config['shipping_info']['last_name'],
-            'checkout[shipping_address][address1]': config['shipping_info']['address1'],
-            'checkout[shipping_address][address2]': config['shipping_info']['address2'],
-            'checkout[shipping_address][city]': config['shipping_info']['city'],
-            'checkout[shipping_address][country]': config['shipping_info']['country'],
-            'checkout[shipping_address][province]': config['shipping_info']['province'],
-            'checkout[shipping_address][zip]': config['shipping_info']['zip'],
-            'checkout[shipping_address][phone]': config['shipping_info']['phone'],
-            'checkout[remember_me]': 'true',
-            'checkout[remember_me]': '0',
-            'checkout[remember_me]': '1',
-            'button': '',
-            'checkout[client_details][browser_width]': '1440',
-            'checkout[client_details][browser_height]': '732',
-            'checkout[client_details][javascript_enabled]': '1',
-            #'g-recaptcha-response': ''
-        }
+        if 'true' in str(config['settings']['captcha'].lower()):
+            token = queue.get()
+            log('Token used: ' + str(token),'yellow')
+            payload_ship_info = {
+                'utf8': '✓',
+                '_method': 'patch',
+                'authenticity_token': auth_token,
+                'previous_step': 'contact_information',
+                'step': 'shipping_method',
+                'checkout[email]': config['shipping_info']['email'],
+                'checkout[shipping_address][first_name]': '',
+                'checkout[shipping_address][last_name]': '',
+                'checkout[shipping_address][address1]': '',
+                'checkout[shipping_address][address2]': '',
+                'checkout[shipping_address][city]': '',
+                'checkout[shipping_address][country]': '',
+                'checkout[shipping_address][province]': '',
+                'checkout[shipping_address][zip]': '',
+                'checkout[shipping_address][phone]': '',
+                'checkout[shipping_address][first_name]': config['shipping_info']['first_name'],
+                'checkout[shipping_address][last_name]': config['shipping_info']['last_name'],
+                'checkout[shipping_address][address1]': config['shipping_info']['address1'],
+                'checkout[shipping_address][address2]': config['shipping_info']['address2'],
+                'checkout[shipping_address][city]': config['shipping_info']['city'],
+                'checkout[shipping_address][country]': config['shipping_info']['country'],
+                'checkout[shipping_address][province]': config['shipping_info']['province'],
+                'checkout[shipping_address][zip]': config['shipping_info']['zip'],
+                'checkout[shipping_address][phone]': config['shipping_info']['phone'],
+                'checkout[remember_me]': 'true',
+                'checkout[remember_me]': '0',
+                'checkout[remember_me]': '1',
+                'button': '',
+                'checkout[client_details][browser_width]': '1440',
+                'checkout[client_details][browser_height]': '732',
+                'checkout[client_details][javascript_enabled]': '1',
+                'g-recaptcha-response': token
+            }
+        else:
+            payload_ship_info = {
+                'utf8': '✓',
+                '_method': 'patch',
+                'authenticity_token': auth_token,
+                'previous_step': 'contact_information',
+                'step': 'shipping_method',
+                'checkout[email]': config['shipping_info']['email'],
+                'checkout[shipping_address][first_name]': '',
+                'checkout[shipping_address][last_name]': '',
+                'checkout[shipping_address][address1]': '',
+                'checkout[shipping_address][address2]': '',
+                'checkout[shipping_address][city]': '',
+                'checkout[shipping_address][country]': '',
+                'checkout[shipping_address][province]': '',
+                'checkout[shipping_address][zip]': '',
+                'checkout[shipping_address][phone]': '',
+                'checkout[shipping_address][first_name]': config['shipping_info']['first_name'],
+                'checkout[shipping_address][last_name]': config['shipping_info']['last_name'],
+                'checkout[shipping_address][address1]': config['shipping_info']['address1'],
+                'checkout[shipping_address][address2]': config['shipping_info']['address2'],
+                'checkout[shipping_address][city]': config['shipping_info']['city'],
+                'checkout[shipping_address][country]': config['shipping_info']['country'],
+                'checkout[shipping_address][province]': config['shipping_info']['province'],
+                'checkout[shipping_address][zip]': config['shipping_info']['zip'],
+                'checkout[shipping_address][phone]': config['shipping_info']['phone'],
+                'checkout[remember_me]': 'true',
+                'checkout[remember_me]': '0',
+                'checkout[remember_me]': '1',
+                'button': '',
+                'checkout[client_details][browser_width]': '1440',
+                'checkout[client_details][browser_height]': '732',
+                'checkout[client_details][javascript_enabled]': '1',
+            }
+
 
         # Submit Shipping info
         log('Submitting Shipping Information..','yellow')
@@ -214,6 +252,7 @@ class Cart:
             log('At Shipping Method - URL: ' + checkout1.url, 'pink')
         else:
             log('Error submitting shipping information','error')
+            #print(checkout1.text)
 
         match1 = re.findall('(class=\"radio-wrapper\" data-shipping-method=\")([^\"]*)', checkout1.text)[0][1]
         log('Shipping Method: ' + match1, 'yellow')
@@ -257,7 +296,7 @@ class Cart:
             log('At Payment Method - URL: ' + checkout2.url, 'pink')
         else:
             log('Error submitting shipping method','error')
-
+        print(session.cookies.__dict__)
         # Payment
 
         # elb.deposit.shopifycs.com/sessions
