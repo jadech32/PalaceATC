@@ -87,7 +87,7 @@ class Cart:
             log(' - ' + item['title'] + ' - ' + str(item['quantity']), 'yellow')
             item = {'updates[' + str(item['id']) + ']': str(item['quantity'])}
             cart_dict.append(item)
-
+        log('--------------------------', 'lightpurple')
     def checkout(self):
         session = self.session
         log('Starting Checkout Process..','info')
@@ -135,7 +135,20 @@ class Cart:
 
         # Send checkout
         checkout0 = session.post('https://shop-usa.palaceskateboards.com/cart', headers=header_checkout, data=payload, allow_redirects=True)
-        log('At Checkout - URL: ' + checkout0.url,'pink')
+
+        # Queue Handling
+        printed = 0
+        while 'throttle' in checkout0.url:
+            if printed == 0:
+                log('In Queue..','info')
+                printed = 1
+
+        if printed == 1:
+            log('Exited Queue..','success')
+        log('At Shipping Info - URL: ' + checkout0.url,'pink')
+        if 'stock_problem' in checkout0.url:
+            log('Stock Problem, exiting program..','error')
+            exit()
 
         # Authenticity Token
         auth_token = re.findall('(name=\"authenticity_token\" value=\")([^\"]*)',checkout0.text)[0][1]
@@ -244,3 +257,7 @@ class Cart:
             log('At Payment Method - URL: ' + checkout2.url, 'pink')
         else:
             log('Error submitting shipping method','error')
+
+        # Payment
+
+        # elb.deposit.shopifycs.com/sessions

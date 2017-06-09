@@ -5,7 +5,7 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 
 ## Issues
 
- - Assumes that you are adding something that is not out of stock (i.e. new items)
+ - Assumes that you are adding something that is not out of stock (i.e. new items). Script will terminate if there are out of stock items in your cart.
 
 
 ## Features / TODO
@@ -14,7 +14,7 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 - [x] Multiple Items per cart
 - [ ] Proxy support
 - [ ] Checkout
-- [ ] Queue support
+- [x] Queue support
 - [ ] Negative Keywords
 - [ ] Scheduling
 
