@@ -1,4 +1,4 @@
-An easy to use script made for Palace Skateboards US store. Project under development.
+An easy to use script made for Palace Skateboards store. Project under development.
 
 ![](http://i.imgur.com/IMWZDdx.gif)
 
