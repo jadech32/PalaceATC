@@ -25,6 +25,10 @@ if __name__ == '__main__':
     captcha = Captcha(api_key)
     queue = Queue()
 
+    if 'true' in config['settings']['browser']['US'].lower() and 'true' in config['settings']['browser']['EU'].lower():
+        log('You have both regions selected - please select only one.','error')
+        exit()
+
     if 'true' in str(config['settings']['captcha'].lower()):
         captcha.harvest(queue)
     log('Initializing script..','info')
@@ -46,7 +50,7 @@ if __name__ == '__main__':
     cart.check_cart()
     # Advised to start solving 3 minutes before drop
     #captcha.harvest()
-    if not 'true' in config['settings']['browser'].lower():
+    if 'false' in config['settings']['browser']['US'].lower() and 'false' in config['settings']['browser']['EU'].lower():
         cart.checkout(queue)
     # Scheduler
     # Checkout

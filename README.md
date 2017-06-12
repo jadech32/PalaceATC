@@ -14,8 +14,9 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 - Follow the format in ```main.py```, only change arguments in ```args=()``` of each thread accordingly.
 
 ### Configuration settings
-- set ```browser``` to ```true``` if you want to checkout via your browser, otherwise set to ```false```
 - ```captcha``` must be set to ```false``` as it does not work yet
+- If you wish to checkout via your browser, set either ```EU``` or ```US``` in ```browser``` to ```true```, but not both. If you want to check out via requests (not working yet), set both to ```false```
+
 
 ## Issues
 - Assumes that you are adding something that is not out of stock (i.e. new items). Script will terminate if there are out of stock items in your cart.

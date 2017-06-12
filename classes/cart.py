@@ -12,7 +12,10 @@ log = Logger().log
 tools = Tools()
 config = tools.load('config/config.json')
 
-checkout_url = 'https://shop-usa.palaceskateboards.com/cart/'
+if 'true' in config['settings']['browser']['US'].lower():
+    checkout_url = 'https://shop-usa.palaceskateboards.com/cart/'
+else:
+    checkout_url = 'https://shop.palaceskateboards.com/cart/'
 
 cart_dict = []
 
@@ -93,7 +96,7 @@ class Cart:
 
         log('--------------------------', 'lightpurple')
 
-        if 'true' in config['settings']['browser'].lower():
+        if 'true' in config['settings']['browser']['US'].lower() or 'true' in config['settings']['browser']['EU'].lower():
             self.browser_checkout()
 
     def browser_checkout(self):
