@@ -7,7 +7,7 @@ class Captcha:
     def __init__(self, apikey):
         self.apiKey = apikey
         self.sitekey = '6LeoeSkTAAAAAA9rkZs5oS82l69OEYjKRZAiKdaF' # Default shopify sitekey
-        self.url = 'https://shop-usa.palaceskateboards.com/'
+        self.url = 'shop-usa.palaceskateboards.com'
 
     def harvest(self, queue):
         log = Logger().log

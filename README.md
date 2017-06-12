@@ -1,12 +1,20 @@
 An easy to use script made for Palace Skateboards US store. Project under development.
 
 ## Installation
+- Clone or download the repo
 - Change values in ```config.example.json``` then rename to ```config.json```.
+- Install the requirements (done once per download)
+- ```pip install requirements.txt```
+- Run ```main.py```
+
+### Adding Items
+- Currently the only way to add items is to modify the threads in ```main.py```
+- Follow the format in ```main.py```, only change arguments in ```args=()``` of each thread accordingly.
 
 ## Issues
-
- - Assumes that you are adding something that is not out of stock (i.e. new items). Script will terminate if there are out of stock items in your cart.
-
+- Assumes that you are adding something that is not out of stock (i.e. new items). Script will terminate if there are out of stock items in your cart.
+- Captcha support currently broken.
+- Multiple sizes per thread / item currently not yet supported.
 
 ## Features / TODO
 

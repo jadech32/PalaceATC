@@ -250,9 +250,10 @@ class Cart:
         match = re.search('Return to customer information',checkout1.text)
         if match:
             log('At Shipping Method - URL: ' + checkout1.url, 'pink')
+
         else:
             log('Error submitting shipping information','error')
-            #print(checkout1.text)
+            print(checkout1.text)
 
         match1 = re.findall('(class=\"radio-wrapper\" data-shipping-method=\")([^\"]*)', checkout1.text)[0][1]
         log('Shipping Method: ' + match1, 'yellow')
@@ -296,7 +297,23 @@ class Cart:
             log('At Payment Method - URL: ' + checkout2.url, 'pink')
         else:
             log('Error submitting shipping method','error')
-        print(session.cookies.__dict__)
+
+        ccinfo = {
+            'credit_card': {
+                'number': config['card_info']['number'],
+                'verification_value': config['card_info']['cvv'],
+                'name': config['shipping_info']['first_name'] + ' ' + config['shipping_info']['last_name'],
+                'month': int(config['card_info']['exp_month']),
+                'year': int(config['card_info']['exp_year'])
+
+            }
+        }
+
+        ccinfo_encode = json.dumps(ccinfo)
+        headers_cc = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4',
+        'Content-Type': 'application/json'
+        }
         # Payment
 
         # elb.deposit.shopifycs.com/sessions
