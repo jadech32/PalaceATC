@@ -11,6 +11,9 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 - Currently the only way to add items is to modify the threads in ```main.py```
 - Follow the format in ```main.py```, only change arguments in ```args=()``` of each thread accordingly.
 
+### Configuration settings
+- set ```browser``` to ```true``` if you want to checkout via your browser, otherwise set to ```false```
+
 ## Issues
 - Assumes that you are adding something that is not out of stock (i.e. new items). Script will terminate if there are out of stock items in your cart.
 - Captcha support currently broken.

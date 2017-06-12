@@ -21,6 +21,7 @@
     "2captcha": "xxxxxx"
   },
   "settings": {
-    "captcha": "false"
+    "captcha": "false",
+    "browser": "true"
   }
 }

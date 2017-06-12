@@ -12,6 +12,8 @@ log = Logger().log
 tools = Tools()
 config = tools.load('config/config.json')
 
+checkout_url = 'https://shop-usa.palaceskateboards.com/cart/'
+
 cart_dict = []
 
 class Cart:
@@ -63,6 +65,8 @@ class Cart:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4'
             }
+            global checkout_url
+            checkout_url = checkout_url + str(item_id) + ':1,'
             lock.acquire()
             add = session.post('https://shop-usa.palaceskateboards.com/cart/add.js', data=payload, headers=headers)
             if '200' in str(add.status_code):
@@ -73,7 +77,6 @@ class Cart:
 
         #for items in data['products']:
         #    print(items['title'])
-
 
     def check_cart(self):
         session = self.session
@@ -87,7 +90,15 @@ class Cart:
             log(' - ' + item['title'] + ' - ' + str(item['quantity']), 'yellow')
             item = {'updates[' + str(item['id']) + ']': str(item['quantity'])}
             cart_dict.append(item)
+
         log('--------------------------', 'lightpurple')
+
+        if 'true' in config['settings']['browser'].lower():
+            self.browser_checkout()
+
+    def browser_checkout(self):
+        webbrowser.open_new_tab(checkout_url)
+
     def checkout(self, queue):
         session = self.session
         log('Starting Checkout Process..','info')

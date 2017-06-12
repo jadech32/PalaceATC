@@ -34,19 +34,20 @@ if __name__ == '__main__':
     '''
     # Small, Medium, Large, one size
     t1 = threading.Thread(target=cart.add_to_cart, args=(['carabiner','palace','silver'],'one size'))
-    t2 = threading.Thread(target=cart.add_to_cart, args=(['carabiner','palace','orange'],'one size'))
+    #t2 = threading.Thread(target=cart.add_to_cart, args=(['carabiner','palace','orange'],'one size'))
     #t3 = threading.Thread(target=cart.add_to_cart, args=(['bong','longsleeve','white'],'large'))
     t1.start()
-    t2.start()
+    #t2.start()
     #t3.start()
     t1.join()
-    t2.join()
+    #t2.join()
     #t3.join()
 
     cart.check_cart()
     # Advised to start solving 3 minutes before drop
     #captcha.harvest()
-    cart.checkout(queue)
+    if 'true' in config['settings']['browser'].lower():
+        cart.checkout(queue)
     # Scheduler
     # Checkout
     # parse
