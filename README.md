@@ -1,5 +1,7 @@
 An easy to use script made for Palace Skateboards US store. Project under development.
 
+![](https://gfycat.com/KeySereneBernesemountaindog)
+
 ## Installation
 - Clone or download the repo
 - Change values in ```config.example.json``` then rename to ```config.json```.
