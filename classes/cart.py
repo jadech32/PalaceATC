@@ -97,6 +97,7 @@ class Cart:
             self.browser_checkout()
 
     def browser_checkout(self):
+        log('Checking out via browser..','info')
         webbrowser.open_new_tab(checkout_url)
 
     def checkout(self, queue):

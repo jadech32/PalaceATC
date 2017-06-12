@@ -46,7 +46,7 @@ if __name__ == '__main__':
     cart.check_cart()
     # Advised to start solving 3 minutes before drop
     #captcha.harvest()
-    if 'true' in config['settings']['browser'].lower():
+    if not 'true' in config['settings']['browser'].lower():
         cart.checkout(queue)
     # Scheduler
     # Checkout
