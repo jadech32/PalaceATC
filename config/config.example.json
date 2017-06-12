@@ -22,7 +22,7 @@
   },
   "settings": {
     "captcha": "false",
-    "retries": "3",
+    "retries": "5",
     "polling-rate": "1",
     "browser": {
       "EU": "false",
