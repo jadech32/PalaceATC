@@ -37,7 +37,7 @@ if __name__ == '__main__':
     cart.add_to_cart(['zollar','jacket','gold'],'small')
     '''
     # Small, Medium, Large, one size
-    t1 = threading.Thread(target=cart.add_to_cart, args=(['carabiner','palace','silver'],'one size'))
+    t1 = threading.Thread(target=cart.add_to_cart, args=(['carabiners','palace','silver'],'one size'))
     #t2 = threading.Thread(target=cart.add_to_cart, args=(['carabiner','palace','orange'],'one size'))
     #t3 = threading.Thread(target=cart.add_to_cart, args=(['bong','longsleeve','white'],'large'))
     t1.start()

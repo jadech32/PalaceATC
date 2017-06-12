@@ -5,12 +5,17 @@ from xmltodict import parse
 import json
 import re
 import webbrowser
+from time import sleep
 from classes.logger import Logger
 from classes.tools import Tools
 
 log = Logger().log
 tools = Tools()
 config = tools.load('config/config.json')
+
+num_retries = config['settings']['retries']
+count = 0
+rate = int(config['settings']['polling-rate'])
 
 if 'true' in config['settings']['browser']['US'].lower():
     checkout_url = 'https://shop-usa.palaceskateboards.com/cart/'
@@ -38,7 +43,9 @@ class Cart:
         item_url = ''
         item_id = ''
         item_name = ''
-
+        global count
+        global num_retries
+        global rate
         # Find item
         for item in data[1:]:
             if all(i in item['image:image']['image:title'].lower() for i in keywords):
@@ -46,8 +53,15 @@ class Cart:
                 item_url = item['loc']
                 item_name = item['image:image']['image:title']
 
-        if item_url=='':
-            log('Item not found, retrying...','error')
+        if item_url=='' and count < int(num_retries):
+            count = count + 1
+            log('Item not found, retrying..  No: ' + str(count),'error')
+            sleep(rate)
+            self.add_to_cart(keywords,size)
+
+        elif count == int(num_retries):
+            exit()
+
         else:
             page = session.get(item_url+'.json')
             #page_data = parse(page.content)
@@ -88,6 +102,8 @@ class Cart:
         data = json.loads(json.dumps(data))
         log('---------- Cart ----------', 'lightpurple')
         log('Item Count: ' + str(data['item_count']),'yellow')
+        if '0' in str(data['item_count']):
+            exit()
         global cart_dict
         for item in data['items']:
             log(' - ' + item['title'] + ' - ' + str(item['quantity']), 'yellow')

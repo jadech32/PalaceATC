@@ -14,7 +14,9 @@ An easy to use script made for Palace Skateboards US store. Project under develo
 - Follow the format in ```main.py```, only change arguments in ```args=()``` of each thread accordingly.
 
 ### Configuration settings
-- ```captcha``` must be set to ```false``` as it does not work yet
+- ```captcha``` must be set to ```false``` as it does not work yet.
+- ```retries``` is the amount of times the script retries finding the product before exiting program.
+- ```polling-rate``` is the delay in between each retry / find attempt in seconds. Keep in mind that shopify gives out soft bans for too many polls.
 - If you wish to checkout via your browser, set either ```EU``` or ```US``` in ```browser``` to ```true```, but not both. If you want to check out via requests (not working yet), set both to ```false```
 
 
