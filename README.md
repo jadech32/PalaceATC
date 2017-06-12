@@ -1,6 +1,6 @@
 An easy to use script made for Palace Skateboards US store. Project under development.
 
-![](https://gfycat.com/KeySereneBernesemountaindog)
+![](http://i.imgur.com/IMWZDdx.gif)
 
 ## Installation
 - Clone or download the repo
