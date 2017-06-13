@@ -6,7 +6,7 @@ An easy to use script made for Palace Skateboards store. Project under developme
 - Clone or download the repo
 - Change values in ```config.example.json``` then rename to ```config.json```.
 - Install the requirements (done once per download)
-- ```pip install requirements.txt```
+- ```pip install -r requirements.txt```
 - Run ```main.py```
 
 ### Adding Items
