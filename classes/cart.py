@@ -6,6 +6,7 @@ import json
 import re
 import webbrowser
 from time import sleep
+from bs4 import BeautifulSoup as BS
 from classes.logger import Logger
 from classes.tools import Tools
 
@@ -346,5 +347,61 @@ class Cart:
         'Content-Type': 'application/json'
         }
         # Payment
+        soup_pay = BS(checkout2.text, 'html.parser')
+        pay_gateway = soup_pay.find('input', {'name': 'checkout[payment_gateway]'})['value']
+        # Builds the data_payload for the random ID for payment
+        data_hts = {"credit_card": {"number": config['card_info']['number'], "name": config['card_info']['name_on_card'],
+                                    "month": config['card_info']['exp_month'], "year": config['card_info']['exp_year'],
+                                    "verification_value": config['card_info']['cvv']}}
+        elb_deposit = session.post("https://elb.deposit.shopifycs.com/sessions", json=data_hts)
+        elb_json = elb_deposit.json()
+        elb_id = elb_json['id']
+        payment_load = {
+            'utf8': '✓',
+            '_method': 'patch',
+            'authenticity_token': soup_pay.find('input', {'name': 'authenticity_token'})['value'],
+            'checkout[buyer_accepts_marketing]': '0',
+            'checkout[billing_address][country]': config['shipping_info']['country'],
+            'checkout[billing_address][province]': config['shipping_info']['state'],
+            'checkout[client_details][browser_height]': '728',
+            'checkout[client_details][browser_width]': '1280',
+            'checkout[client_details][javascript_enabled]': '0',
+            'checkout[credit_card][month]': config['card_info']['exp_month'],
+            'checkout[credit_card][name]': config['card_info']['name_on_card'],
+            'checkout[credit_card][number]': config['card_info']['number'],
+            'checkout[credit_card][verification_value]': config['card_info']['cvv'],
+            'checkout[credit_card][year]': config['card_info']['exp_year'],
+            'checkout[credit_card][vault]': 'false',
+            'checkout[different_billing_address]': 'false',
+            'checkout[remember_me]': '',
+            'checkout[remember_me]': '0',
+            'checkout[remember_me_country_code]': '1',
+            'checkout[remember_me_phone]': config['shipping_info']['phone'],
+            'checkout[total_price]': soup_pay.find('input', {'name': 'checkout[total_price]'})['value'],
+            'checkout[payment_gateway]': pay_gateway,
+            'complete': '1',
+            'expiry': config['card_info']['exp_month'] + '/' + config['card_info']['exp_year'][-2:],
+            'previous_step': 'payment_method',
+            's': elb_id,
+            'step': ''
+
+        }
+        checkout3 = session.post(checkout0.url, data=payment_load, headers=headers)  # payment
+        process = True
+        
+        # while loop is needed since we need to wait for shopify to process the order
+        while process:
+            process_pay = session.get(checkout3.url)
+            print(process_pay.text)
+            if process_pay.url != checkout3.url:
+                process = False
+                if "validate" in process_pay.url:
+                    processing_text = soup.find("div", class_="notice notice--warning")
+                    print(processing_text)
+                if "declined" and "validate" not in process_pay.text:
+                    print("Checkout complete! " + process_pay.url)
+            else:
+                print("{} Task: {} Processing payment...")
+                sleep(200)
 
         # elb.deposit.shopifycs.com/sessions
